@@ -1,0 +1,11 @@
+{
+  "name":"com.cuku.pythonity",
+  "version":"1.0.0",
+  "displayName":"Pythonity",
+  "description":"Use Python in Unity.",
+  "unity":"2019.4",
+  "author":{
+     "name":"Cuku"
+  },
+  "unityRelease":"7f1"
+}
