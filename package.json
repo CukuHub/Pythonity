@@ -3,9 +3,9 @@
   "version":"1.0.0",
   "displayName":"Pythonity",
   "description":"Use Python in Unity.",
-  "unity":"2019.4",
+  "unity":"2022.2",
   "author":{
      "name":"Cuku"
   },
-  "unityRelease":"7f1"
+  "unityRelease":"17f1"
 }
