@@ -1,6 +1,8 @@
 # Pythonity
 Use Python in Unity.
 
+> **Important**: Make sure to call `Pythonity.Shutdown()` after finishing, usually when the application quits.
+
 # Install Pythonnet
 1. Install Python as normal
 2. Install virtualenv: _**pip install virtualenv**_
