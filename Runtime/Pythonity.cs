@@ -1,4 +1,5 @@
 using Cuku.Provider;
+using Cysharp.Threading.Tasks;
 using Python.Runtime;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +8,6 @@ namespace Cuku.Pythonity
 {
     public static class Pythonity
     {
-#if !UNITY_EDITOR
         static Pythonity()
         {
             foreach (var pyvenv in "pyvenv.cfg".GetStreamingAssets())
@@ -35,19 +35,21 @@ namespace Cuku.Pythonity
                 }
             }
         }
-#endif
 
         /// <summary>
-        /// Execute python code with optional input parameters and receive option output data.
+        /// Execute python code from specified script with optional input parameters and receive optional output data.
         /// </summary>
-        /// <param name="code">Properly formated Python code.</param>
-        /// <param name="output">Optional output object returned by Python code.
-        /// Important: Is your responsability to cast the object to the correct type!</param>
-        /// <param name="input">Option input parameters passed to the python code before executing it.</param>
+        /// <param name="script">Properly formated Python code.</param>
+        /// <param name="directory">Optional directory inside StreamingAssets where to search for the script file.</param>
+        /// <param name="output">Optional output object returned by the Python code.
+        /// <para>IMPORTANT: Is the developers responsability to cast the object to the correct type!</para></param>
+        /// <param name="input">Optional input parameters passed to the python code before executing it.</param>
         /// <returns></returns>
-        public static object Execute(string code, string output = null, params KeyValuePair<string, object>[] input)
+        public static async UniTask<object> Execute(string script, string directory = "", string output = null, params KeyValuePair<string, object>[] input)
         {
-            var outputObject = new object();
+            // Load script code from StreamingAssets
+            var code = await System.IO.File.ReadAllTextAsync($"{script}.py"
+                .GetStreamingAssets(directory)[0]).AsUniTask();
 
             using (Py.GIL())
             {
@@ -65,11 +67,11 @@ namespace Cuku.Pythonity
                     // Cache object returned by the python code and return it at the end
                     if (!string.IsNullOrEmpty(output))
                     {
-                        outputObject = scope.Get<object>(output);
+                        return scope.Get<object>(output);
                     }
-                }
 
-                return outputObject;
+                    return new object();
+                }
             }
         }
 

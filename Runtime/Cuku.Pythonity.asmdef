@@ -2,7 +2,8 @@
     "name": "Cuku.Pythonity",
     "rootNamespace": "",
     "references": [
-        "GUID:6e23a17ee42cb9847a723ae6ca59aa3a"
+        "GUID:6e23a17ee42cb9847a723ae6ca59aa3a",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
