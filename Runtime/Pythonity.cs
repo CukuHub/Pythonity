@@ -8,6 +8,7 @@ namespace Cuku.Pythonity
 #if !UNITY_EDITOR
         static Pythonity()
         {
+            // IMPROVE: https://github.com/InfiniTwin/Pythonity/issues/3
             Runtime.PythonDLL = @"C:\Python\Python311\python311.dll";
             PythonEngine.Initialize();
 
@@ -17,9 +18,8 @@ namespace Cuku.Pythonity
                 dynamic py_sys = Py.Import("sys");
 
                 // IMPROVE: https://github.com/InfiniTwin/Pythonity/issues/2
-                string site_pkg = "C:\\Python\\spacyvenv\\Lib\\site-packages";
-
-                py_sys.path.insert(0, site_pkg);
+                py_sys.path.insert(0, System.IO.Path.Combine(
+                    UnityEngine.Application.streamingAssetsPath, @"venv/Lib/site-packages"));
             }
         }
 #endif
