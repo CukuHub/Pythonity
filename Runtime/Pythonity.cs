@@ -1,5 +1,7 @@
 using Python.Runtime;
 using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
 
 namespace Cuku.Pythonity
 {
@@ -8,18 +10,30 @@ namespace Cuku.Pythonity
 #if !UNITY_EDITOR
         static Pythonity()
         {
-            // IMPROVE: https://github.com/InfiniTwin/Pythonity/issues/3
-            Runtime.PythonDLL = @"C:\Python\Python311\python311.dll";
-            PythonEngine.Initialize();
-
-            // Add vsite-packages path where libraries are installed
-            using (Py.GIL())
+            string[] pyvenvs = Directory.GetFiles(Application.streamingAssetsPath, "pyvenv.cfg", SearchOption.AllDirectories);
+            foreach (var pyvenv in pyvenvs)
             {
-                dynamic py_sys = Py.Import("sys");
-
-                // IMPROVE: https://github.com/InfiniTwin/Pythonity/issues/2
-                py_sys.path.insert(0, System.IO.Path.Combine(
-                    UnityEngine.Application.streamingAssetsPath, @"venv/Lib/site-packages"));
+                var lines = File.ReadAllLines(pyvenv);
+                foreach (var line in lines)
+                {
+                    // Reference python.dll and initialize PythonEngine
+                    if (line.StartsWith("home ="))
+                    {
+                        var home = line.Substring("home =".Length).Trim();
+                        Runtime.PythonDLL = Path.Combine(home, new DirectoryInfo(home).Name + ".dll");
+                        PythonEngine.Initialize();
+                    }
+                    // Add site-packages path where libraries are installed
+                    else if (line.StartsWith("command ="))
+                    {
+                        var site_packages = Path.Combine(line.Substring(line.IndexOf("-m venv") + "-m venv".Length).Trim(), @"Lib\site-packages");
+                        using (Py.GIL())
+                        {
+                            dynamic py_sys = Py.Import("sys");
+                            py_sys.path.insert(0, site_packages);
+                        }
+                    }
+                }
             }
         }
 #endif
