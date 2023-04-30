@@ -1,7 +1,7 @@
+using Cuku.Provider;
 using Python.Runtime;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 
 namespace Cuku.Pythonity
 {
@@ -10,8 +10,7 @@ namespace Cuku.Pythonity
 #if !UNITY_EDITOR
         static Pythonity()
         {
-            string[] pyvenvs = Directory.GetFiles(Application.streamingAssetsPath, "pyvenv.cfg", SearchOption.AllDirectories);
-            foreach (var pyvenv in pyvenvs)
+            foreach (var pyvenv in "pyvenv.cfg".GetStreamingAssets())
             {
                 var lines = File.ReadAllLines(pyvenv);
                 foreach (var line in lines)
