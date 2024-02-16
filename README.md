@@ -10,7 +10,7 @@ Use Python in Unity.
 4. Create Pythonnet virtualenv: _**virtualenv Pythonnet**_
 5. _**cd Pythonnet/Scripts**_
 6. Activate the created virtualenv: _**activate.bat**_
-7. Install _**Pythonnet**_: _**pip install pythonnet**_
+7. Install Pythonnet: _**pip install pythonnet**_
 
 # Create Virtual Environment
 1. Open _**Command Prompt**_ and cd at: _**../[ProjectPath]/Assets/StreamingAssets**_
