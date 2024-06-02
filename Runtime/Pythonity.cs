@@ -1,4 +1,3 @@
-using Cuku.Provider;
 using Cysharp.Threading.Tasks;
 using Python.Runtime;
 using System.Collections.Generic;
@@ -16,7 +15,7 @@ namespace Cuku.Pythonity
 					// Reference python.dll and initialize PythonEngine
 					if (line.StartsWith("home ="))
 					{
-						var home = line.Substring("home =".Length).Trim();
+						var home = line["home =".Length..].Trim();
 						Runtime.PythonDLL = Path.Combine(home, new DirectoryInfo(home).Name + ".dll");
 						PythonEngine.Initialize();
 					}
@@ -32,23 +31,18 @@ namespace Cuku.Pythonity
 		}
 
 		/// <summary>
-		/// The Python code of a Package is located in "StreamingAssets/Py[PackageName]".
-		/// </summary>
-		public static string PythonPackage(this string package) => $"Py{package}";
-
-		/// <summary>
 		/// Execute python code from specified script with optional input parameters and receive optional output data.
 		/// </summary>
-		/// <param name="script">Properly formated Python code.</param>
-		/// <param name="directory">Optional directory inside StreamingAssets where to search for the script file.</param>
+		/// <param name="script">Properly formated python code.</param>
+		/// <param name="directory">Optional python script directory, relative to StreamingAssets.</param>
 		/// <param name="output">Optional output object returned by the Python code.
 		/// <para>IMPORTANT: Is the developers responsability to cast the object to the correct type!</para></param>
 		/// <param name="input">Optional input parameters passed to the python code.</param>
-		/// <returns></returns>
+		/// <returns>IMPORTANT: Is the developers responsability to cast the object to the correct type!</returns>
 		public static async UniTask<object> Execute(this string script, string directory = "", string output = null, params KeyValuePair<string, object>[] input)
 		{
 			// Load script code from StreamingAssets
-			var code = await System.IO.File.ReadAllTextAsync($"{script}.py"
+			var code = await File.ReadAllTextAsync($"{script}.py"
 				.GetStreamingAssets(directory)[0]).AsUniTask();
 
 			using (Py.GIL())
@@ -72,5 +66,11 @@ namespace Cuku.Pythonity
 		}
 
 		public static void Shutdown() => PythonEngine.Shutdown();
+
+		internal static string[] GetStreamingAssets(this string searchPattern, string directory = "")
+			=> Directory.GetFiles(
+				Path.Combine(UnityEngine.Application.streamingAssetsPath, directory),
+				searchPattern,
+				SearchOption.AllDirectories);
 	}
 }
