@@ -1,7 +1,8 @@
 # Pythonity
 Use Python in Unity.
 
-> **Important**: Make sure to call `Pythonity.Shutdown()` after finishing, usually when the application quits.
+> [!IMPORTANT]
+> Make sure to call `Pythonity.Shutdown()` after finishing! When the application quits for example.
 
 # Install Pythonnet
 1. Install Python as normal
